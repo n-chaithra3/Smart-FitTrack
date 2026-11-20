@@ -1,0 +1,25 @@
+*{box-sizing:border-box;margin:0;padding:0;font-family:"Segoe UI",Arial,sans-serif}
+body{background:#f4f7f6;color:#1f2a2e}
+header{display:flex;justify-content:space-between;align-items:center;padding:14px 36px;background:#fff;border-bottom:1px solid #e1e8e6}
+.logo{font-weight:700;font-size:20px;color:#0f766e}
+header a{color:#0f766e;text-decoration:none;font-size:14px;margin-left:16px}
+.auth{display:flex;min-height:calc(100vh - 54px);align-items:center;justify-content:center;gap:70px;padding:30px}
+.intro h1{font-size:34px;color:#0f766e;line-height:1.2;margin:10px 0}
+.intro p{color:#556;max-width:380px;line-height:1.5}.intro small{color:#0f766e;font-weight:700;letter-spacing:1px;font-size:12px}
+.intro ul{margin:16px 0 0 18px;color:#556;font-size:14px;line-height:1.8}
+.box{background:#fff;border:1px solid #e1e8e6;border-radius:12px;padding:28px;width:340px}
+.tabs{display:flex;gap:8px;margin-bottom:18px}.tabs button{flex:1;padding:8px;border:1px solid #cfdcd9;background:#fff;border-radius:6px;cursor:pointer}
+.tabs button.on{background:#0f766e;color:#fff;border-color:#0f766e}
+label{display:block;font-size:13px;color:#445;margin:10px 0 5px}
+input,select{width:100%;padding:9px 10px;border:1px solid #cfdcd9;border-radius:6px;font-size:14px;background:#fff}
+.btn{width:100%;margin-top:16px;padding:10px;border:0;border-radius:6px;background:#0f766e;color:#fff;font-size:14px;cursor:pointer}
+.msg{font-size:13px;margin-top:10px;color:#b42318;min-height:18px}
+main{padding:26px 36px}main h2{font-size:24px;margin-bottom:4px}.sub{color:#667;font-size:14px;margin-bottom:18px}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:18px}
+.card{background:#fff;border:1px solid #e1e8e6;border-radius:10px;padding:16px}.card span{font-size:12px;color:#667}.card b{display:block;font-size:24px;margin-top:6px;color:#0f766e}
+.grid{display:grid;grid-template-columns:320px 1fr;gap:16px}
+.panel{background:#fff;border:1px solid #e1e8e6;border-radius:10px;padding:18px}.panel h3{font-size:15px;margin-bottom:6px}
+.preview{font-size:13px;color:#0f766e;margin-top:10px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px}th,td{text-align:left;padding:7px;border-bottom:1px solid #eef2f1}
+th{color:#667;font-weight:600}.del{background:none;border:1px solid #e3b4b0;color:#b42318;border-radius:5px;padding:3px 8px;cursor:pointer;font-size:12px}
+.row{display:flex;justify-content:space-between;align-items:center}.row input{width:200px}
