@@ -1,0 +1,22 @@
+<!DOCTYPE html><html><head><title>Smart FitTrack - Login</title><link rel="stylesheet" href="/static/style.css"></head><body>
+<header><div class="logo">🏃 Smart FitTrack</div></header>
+<div class="auth"><div class="intro"><small>PERSONAL FITNESS TRACKER</small><h1>Track your workouts.<br>Know your calories.</h1>
+<p>Log your daily exercise, see the calories you burn, and follow your progress over time.</p>
+<ul><li>Record activity, duration and weight</li><li>Automatic calorie estimate (MET formula)</li><li>Summary cards, chart and searchable history</li></ul></div>
+<div class="box"><div class="tabs"><button id="tLogin" class="on" onclick="mode('login')">Login</button><button id="tReg" onclick="mode('register')">Create account</button></div>
+<label>Email</label><input id="email" type="email" placeholder="you@example.com">
+<label>Password</label><input id="password" type="password" placeholder="At least 6 characters">
+<button class="btn" id="go" onclick="submitForm()">Login</button><div class="msg" id="msg"></div></div></div>
+<script>
+let current='login';
+function mode(m){current=m;tLogin.className=m==='login'?'on':'';tReg.className=m==='register'?'on':'';go.textContent=m==='login'?'Login':'Create account';msg.textContent='';}
+async function submitForm(){
+  const body={email:email.value,password:password.value};
+  if(!body.email||body.password.length<6){msg.textContent='Enter a valid email and a 6+ character password';return;}
+  const res=await fetch('/api/'+current,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const data=await res.json();
+  if(!res.ok){msg.textContent=data.error;return;}
+  if(current==='register'){mode('login');msg.style.color='#0f766e';msg.textContent='Account created. Please log in.';}
+  else location.href='/';
+}
+</script></body></html>
