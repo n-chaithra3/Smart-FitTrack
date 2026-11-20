@@ -1,9 +1,11 @@
+import os
 import sqlite3
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-app.secret_key = "change-this-secret-key"
+# Random value created at startup for login sessions (no secret key stored in the code)
+app.secret_key = os.urandom(24)
 DB_NAME = "fittrack.db"
 
 # MET values (Metabolic Equivalent of Task) for each activity
