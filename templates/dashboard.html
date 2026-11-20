@@ -1,0 +1,46 @@
+<!DOCTYPE html><html><head><title>Smart FitTrack - Dashboard</title><link rel="stylesheet" href="/static/style.css"></head><body>
+<header><div class="logo">🏃 Smart FitTrack</div><div><span style="font-size:14px;color:#556">{{ email }}</span><a href="/logout">Logout</a></div></header>
+<main><h2>Workout dashboard</h2><div class="sub">Calories are estimated as MET × body weight (kg) × duration (hours).</div>
+<div class="cards"><div class="card"><span>Total workouts</span><b id="cCount">0</b></div><div class="card"><span>Total minutes</span><b id="cMin">0</b></div>
+<div class="card"><span>Calories burned</span><b id="cCal">0</b></div><div class="card"><span>Avg calories / workout</span><b id="cAvg">0</b></div></div>
+<div class="grid"><div class="panel"><h3>Add workout</h3>
+<label>Date</label><input id="date" type="date">
+<label>Activity</label><select id="activity"><option>Walking</option><option>Running</option><option>Cycling</option><option>Swimming</option><option>Yoga</option></select>
+<label>Duration (minutes)</label><input id="duration" type="number" min="1" placeholder="e.g. 30">
+<label>Body weight (kg)</label><input id="weight" type="number" min="1" placeholder="e.g. 60">
+<div class="preview" id="preview">Estimated calories: –</div>
+<button class="btn" onclick="addWorkout()">Save workout</button><div class="msg" id="msg"></div></div>
+<div class="panel"><h3>Calories per workout</h3><canvas id="chart" width="700" height="170"></canvas>
+<div class="row" style="margin-top:12px"><h3>History</h3><input id="search" placeholder="Search by activity or date" oninput="render()"></div>
+<table><thead><tr><th>Date</th><th>Activity</th><th>Minutes</th><th>Weight</th><th>Calories</th><th></th></tr></thead><tbody id="rows"></tbody></table></div></div></main>
+<script>
+const MET={Walking:3.5,Running:9.8,Cycling:7.5,Swimming:8.0,Yoga:2.5};
+let workouts=[];
+date.valueAsDate=new Date();
+function estimate(){const d=+duration.value,w=+weight.value;return d>0&&w>0?(MET[activity.value]*w*d/60).toFixed(1):null;}
+[duration,weight,activity].forEach(el=>el.addEventListener('input',()=>{const e=estimate();preview.textContent='Estimated calories: '+(e?e+' kcal':'–');}));
+async function load(){const res=await fetch('/api/workouts');workouts=await res.json();render();}
+function render(){
+  const q=search.value.toLowerCase();
+  const list=workouts.filter(w=>(w.activity+' '+w.workout_date).toLowerCase().includes(q));
+  rows.innerHTML=list.map(w=>`<tr><td>${w.workout_date}</td><td>${w.activity}</td><td>${w.duration_min}</td><td>${w.weight_kg} kg</td><td>${w.calories}</td><td><button class="del" onclick="del(${w.id})">Delete</button></td></tr>`).join('');
+  const total=workouts.reduce((s,w)=>s+w.calories,0),mins=workouts.reduce((s,w)=>s+w.duration_min,0);
+  cCount.textContent=workouts.length;cMin.textContent=mins;cCal.textContent=total.toFixed(0);cAvg.textContent=workouts.length?(total/workouts.length).toFixed(0):0;
+  drawChart();
+}
+function drawChart(){
+  const c=chart.getContext('2d');c.clearRect(0,0,700,170);const max=Math.max(100,...workouts.map(w=>w.calories));
+  const bw=Math.min(60,640/Math.max(workouts.length,1)-10);
+  workouts.forEach((w,i)=>{const h=w.calories/max*130,x=40+i*(bw+10);c.fillStyle='#14b8a6';c.fillRect(x,145-h,bw,h);
+    c.fillStyle='#556';c.font='11px Arial';c.fillText(w.workout_date.slice(5),x,162);c.fillText(Math.round(w.calories),x+4,140-h);});
+  c.strokeStyle='#cfdcd9';c.beginPath();c.moveTo(30,145);c.lineTo(690,145);c.stroke();
+}
+async function addWorkout(){
+  if(!estimate()){msg.textContent='Enter a valid duration and weight';return;}
+  const res=await fetch('/api/workouts',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({workout_date:date.value,activity:activity.value,duration_min:duration.value,weight_kg:weight.value})});
+  const data=await res.json();msg.textContent=res.ok?'':data.error;if(res.ok){duration.value='';load();}
+}
+async function del(id){await fetch('/api/workouts/'+id,{method:'DELETE'});load();}
+load();
+</script></body></html>
